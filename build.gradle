@@ -1,0 +1,78 @@
+apply plugin: 'com.android.application'
+
+dependencies {
+    implementation project(':unityLibrary')
+    compileOnly files('libs/unity-classes.jar')
+    //2. 添加⼴告依赖包
+//    implementation(name: 'csj_ad_sdk_211014', ext: 'aar')
+//    implementation (name: 'gdt_ad_sdk_210928', ext:'aar')
+//    implementation (name: 'ks_ad_sdk_211014', ext:'aar')
+//    implementation(name: 'pocket_ad_sdk_2.0.0', ext:'aar')
+    implementation files('libs/csj_ad_sdk_220513.aar')
+    implementation files('libs/gdt_ad_sdk_220531.aar')
+    implementation files('libs/ks_ad_sdk_220531.aar')
+    implementation files('libs/pocket_ad_sdk_3.0.6.aar')
+    implementation 'com.squareup.okhttp3:okhttp:4.9.2'
+    implementation 'com.google.code.gson:gson:2.8.8'
+    implementation 'androidx.legacy:legacy-support-core-ui:1.0.0'
+}
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion '30.0.2'
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        minSdkVersion 22
+        targetSdkVersion 30
+        applicationId 'com.harbinger.shaft'
+        ndk {
+            abiFilters 'armeabi-v7a'
+        }
+        versionCode 1
+        versionName '1.0'
+    }
+
+    aaptOptions {
+        noCompress = ['.unity3d', '.ress', '.resource', '.obb', '.bundle', '.unityexp'] + unityStreamingAssets.tokenize(', ')
+        ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~"
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
+            signingConfig signingConfigs.debug
+            jniDebuggable true
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt')
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    packagingOptions {
+        doNotStrip '*/armeabi-v7a/*.so'
+    }
+
+    bundle {
+        language {
+            enableSplit = false
+        }
+        density {
+            enableSplit = false
+        }
+        abi {
+            enableSplit = true
+        }
+    }
+}
